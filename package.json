@@ -1,0 +1,12 @@
+{
+  "name": "ods-local-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Oliver Furmage",
+  "license": "ISC",
+  "dependencies": {
+    "cron": "^1.8.2",
+    "express": "^4.17.1"
+  }
+}
