@@ -1,21 +1,21 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const port = 3000;
 
-var CronJob = require('cron').CronJob;
+const express = require('express');
+const app = express();
+const CronJob = require('cron').CronJob;
+const exec = require('child_process').exec, child;
 
-let count = 1;
-
+// set up job
 var job = new CronJob(
     '* * * * * *', 
-    function() {
-        console.log(count);
-        count++;
-    },
+    takePhoto,
     null, 
     true, 
     'America/Los_Angeles'
 );
+
+// stop job on server restart
+job.stop();
 
 app.get('/start', (req, res) => {
     job.start()
@@ -24,7 +24,6 @@ app.get('/start', (req, res) => {
 
 app.get('/stop', (req, res) => {
     job.stop()
-    count = 1;
     res.send('Stopped!')
 })
 
@@ -34,3 +33,16 @@ app.get("/status", (req,res)=>{
 })
 
 app.listen(port, () => console.log(`ODS server running on port ${port}`))
+
+function takePhoto(){
+    const script = exec('sh takeSinglePhoto.sh /home/pi/FBI/scripts/')
+
+    script.stdout.on('data', (data)=>{
+        console.log("TAKE_PHOTO SUCCESSFUL!")
+        console.log(data);
+    });
+    script.stderr.on('data', (data)=>{
+        console.log("TAKE_PHOTO ERROR!")
+        console.error(data);
+    });
+}
