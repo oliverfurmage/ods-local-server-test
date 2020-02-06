@@ -38,11 +38,9 @@ function takePhoto(){
     const script = exec('sh /home/pi/FBI/scripts/takesinglephoto.sh')
 
     script.stdout.on('data', (data)=>{
-        console.log("TAKE_PHOTO SUCCESSFUL!")
         console.log(data);
     });
     script.stderr.on('data', (data)=>{
-        console.log("TAKE_PHOTO ERROR!")
         console.error(data);
     });
 }
