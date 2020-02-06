@@ -35,7 +35,7 @@ app.get("/status", (req,res)=>{
 app.listen(port, () => console.log(`ODS server running on port ${port}`))
 
 function takePhoto(){
-    const script = exec('sh takeSinglePhoto.sh /home/pi/FBI/scripts/')
+    const script = exec('sh takesinglephoto.sh /home/pi/FBI/scripts/')
 
     script.stdout.on('data', (data)=>{
         console.log("TAKE_PHOTO SUCCESSFUL!")
