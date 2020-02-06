@@ -7,7 +7,7 @@ var exec = require('child_process').exec, child;
 
 // set up job
 var job = new CronJob(
-    '* * * * * *', 
+    '*/3 * * * * *', 
     takePhoto,
     null, 
     true, 
