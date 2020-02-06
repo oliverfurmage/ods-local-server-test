@@ -1,9 +1,9 @@
-const port = 3000;
+const port = 3333;
 
 const express = require('express');
 const app = express();
 const CronJob = require('cron').CronJob;
-const exec = require('child_process').exec, child;
+var exec = require('child_process').exec, child;
 
 // set up job
 var job = new CronJob(
