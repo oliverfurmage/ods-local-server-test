@@ -17,20 +17,40 @@ var job = new CronJob(
 // stop job on server restart
 job.stop();
 
-app.get('/start', (req, res) => {
+app.post('/start', (req, res) => {
     job.start()
-    res.send('Started!')
+
+    var response = {
+        error: false
+    }
+
+    res.send(JSON.stringify(response))
 })
 
-app.get('/stop', (req, res) => {
+app.post('/stop', (req, res) => {
     job.stop()
-    res.send('Stopped!')
+
+    var response = {
+        error: false
+    }
+
+    res.send(JSON.stringify(response))
 })
 
-app.get("/status", (req,res)=>{
-    var response = job.running;
-    res.send({response});
+app.post("/status", (req,res)=>{
+    var running = job.running;
+
+    var response = {
+        error: false,
+        data : {
+            running
+        }
+    }
+
+    res.send(JSON.stringify(response))
 })
+
+app.use(express.static('public'))
 
 app.listen(port, () => console.log(`ODS server running on port ${port}`))
 
