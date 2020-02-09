@@ -3,14 +3,14 @@ const port = 3333;
 const express = require('express');
 const app = express();
 const CronJob = require('cron').CronJob;
-var exec = require('child_process').exec, child;
+const spawn = require('child_process').spawn;
 
 // set up job
 var job = new CronJob(
-    '0 * * * *', 
+    '0 * * * *',
     triggerVideo,
-    null, 
-    true, 
+    null,
+    true,
     'America/Los_Angeles'
 );
 
@@ -39,12 +39,12 @@ app.post('/stop', (req, res) => {
     res.send(JSON.stringify(response))
 })
 
-app.post("/status", (req,res)=>{
+app.post("/status", (req, res) => {
     var running = job.running;
 
     var response = {
         error: false,
-        data : {
+        data: {
             running
         }
     }
@@ -58,7 +58,7 @@ app.listen(port, () => {
     console.log(`ODS server running on port ${port}`);
 });
 
-function triggerVideo(){
+function triggerVideo() {
     var minutes = 60 - new Date().getMinutes();
     minutes = 0 ? 60 : minutes;
 
@@ -66,18 +66,17 @@ function triggerVideo(){
 
     console.log("RUN", `sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`)
 
-    const script = exec(`sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`);
+    const ls = spawn(`sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`)
 
-    if(script.error){
-        console.error("triggerVideo_ScriptError", script.error);
-    }
+    ls.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
 
-    if(script.error == null){
-        script.stdout.on('data', (data)=>{
-            console.log("STDOUT", data);
-        });
-        script.stderr.on('data', (data)=>{
-            console.error("STDERR", data);
-        });
-    }
+    ls.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    ls.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
 }
