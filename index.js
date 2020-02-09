@@ -24,6 +24,8 @@ app.post('/start', (req, res) => {
         error: false
     }
 
+    triggerVideo();
+
     res.send(JSON.stringify(response))
 })
 
@@ -54,9 +56,6 @@ app.use(express.static('public'))
 
 app.listen(port, () => {
     console.log(`ODS server running on port ${port}`);
-    if(!job.running){
-        triggerVideo();
-    }
 });
 
 function triggerVideo(){
@@ -66,6 +65,8 @@ function triggerVideo(){
     if(seconds == 0){
         seconds = 60;
     }
+
+    console.log("RUN", `sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`)
 
     const script = exec(`sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`);
 
