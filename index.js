@@ -7,8 +7,8 @@ var exec = require('child_process').exec, child;
 
 // set up job
 var job = new CronJob(
-    '*/3 * * * * *', 
-    takePhoto,
+    '0 * * * *', 
+    triggerVideo,
     null, 
     true, 
     'America/Los_Angeles'
@@ -54,13 +54,19 @@ app.use(express.static('public'))
 
 app.listen(port, () => console.log(`ODS server running on port ${port}`))
 
-function takePhoto(){
-    const script = exec('sh /home/pi/FBI/scripts/takesinglephoto.sh')
+function triggerVideo(){
+    const script = exec('sh /home/pi/FBI/scripts/takevideo_ollie.sh')
 
-    script.stdout.on('data', (data)=>{
-        console.log(data);
-    });
-    script.stderr.on('data', (data)=>{
-        console.error(data);
-    });
+    if(script.error){
+        console.error("triggerVideo_ScriptError", script.error);
+    }
+
+    if(script.error == null){
+        script.stdout.on('data', (data)=>{
+            console.log("STDOUT", data);
+        });
+        script.stderr.on('data', (data)=>{
+            console.error("STDERR", data);
+        });
+    }
 }
