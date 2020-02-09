@@ -52,10 +52,22 @@ app.post("/status", (req,res)=>{
 
 app.use(express.static('public'))
 
-app.listen(port, () => console.log(`ODS server running on port ${port}`))
+app.listen(port, () => {
+    console.log(`ODS server running on port ${port}`);
+    if(!job.running){
+        triggerVideo();
+    }
+});
 
 function triggerVideo(){
-    const script = exec('sh /home/pi/FBI/scripts/takevideo_ollie.sh')
+
+    var seconds = 60 - new Date().getMinutes();
+    
+    if(seconds == 0){
+        seconds = 60;
+    }
+
+    const script = exec(`sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`);
 
     if(script.error){
         console.error("triggerVideo_ScriptError", script.error);
