@@ -62,7 +62,7 @@ function triggerVideo(){
     var minutes = 60 - new Date().getMinutes();
     minutes = 0 ? 60 : minutes;
 
-    var seconds = (minutes * 60) - 30; // minus 30 seconds to allow for next script to run
+    var seconds = (minutes * 60) - 120; // minus 2 mins seconds to allow for next script to run
 
     console.log("RUN", `sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`)
 
