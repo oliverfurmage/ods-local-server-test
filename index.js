@@ -56,8 +56,6 @@ app.use(express.static('public'))
 
 app.listen(port, () => {
     console.log(`ODS server running on port ${port}`);
-
-    triggerVideo();
 });
 
 function triggerVideo(){
@@ -86,7 +84,9 @@ function triggerVideo(){
 
             if(data.includes("Device or resource busy")){
                 setTimeout(function(){
-                    triggerVideo();
+                    if(job.running){
+                        triggerVideo();
+                    }
                 }, 1000)
             }
         });
