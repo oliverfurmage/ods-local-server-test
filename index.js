@@ -63,7 +63,7 @@ function triggerVideo(){
     minutes = 0 ? 60 : minutes;
 
     var seconds = (minutes * 60);
-    
+
     console.log("RUN", `sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`)
 
     const script =  exec(`sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`, { shell:true });
@@ -78,7 +78,7 @@ function triggerVideo(){
         });
         script.stderr.on('data', (data)=>{
 
-            if(!data.startsWith("frame")){
+            if(data.startsWith("TAKEVIDEO")){
                 console.error("STDERR", data);
             }
 
