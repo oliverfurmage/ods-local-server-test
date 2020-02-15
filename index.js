@@ -80,6 +80,11 @@ function triggerVideo(){
         });
         script.stderr.on('data', (data)=>{
             console.error("STDERR", data);
+            if(data.includes("Device or resource busy")){
+                setTimeout(function(){
+                    triggerVideo();
+                }, 1000)
+            }
         });
     }
 }
