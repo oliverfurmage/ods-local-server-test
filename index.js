@@ -79,7 +79,11 @@ function triggerVideo(){
             console.log("STDOUT", data);
         });
         script.stderr.on('data', (data)=>{
-            console.error("STDERR", data);
+
+            if(!data.startsWith("frame")){
+                console.error("STDERR", data);
+            }
+
             if(data.includes("Device or resource busy")){
                 setTimeout(function(){
                     triggerVideo();
