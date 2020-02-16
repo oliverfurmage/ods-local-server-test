@@ -3,7 +3,11 @@ const port = 3333;
 const express = require('express');
 const app = express();
 const CronJob = require('cron').CronJob;
-var exec = require('child_process').exec;
+const exec = require('child_process').exec;
+const fs = require('fs');
+const path = require('path');
+
+
 
 // set up job
 var job = new CronJob(
@@ -52,6 +56,13 @@ app.post("/status", (req,res)=>{
     res.send(JSON.stringify(response))
 })
 
+app.post("/videos", (req,res)=>{
+    const root = "/home/pi/FBI/ods-local-server-test/public/videos";
+    const json = dirTree(root);
+
+    res.send(json);
+})
+
 app.use(express.static('public'))
 
 app.listen(port, () => {
@@ -64,9 +75,9 @@ function triggerVideo(){
 
     var seconds = (minutes * 60);
 
-    console.log("RUN", `sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`)
+    console.log("RUN", `sh /home/pi/FBI/ods-local-server-test/scripts/takevideo.sh ${seconds}`)
 
-    const script =  exec(`sh /home/pi/FBI/scripts/takevideo_ollie.sh ${seconds}`, { shell:true });
+    const script =  exec(`sh /home/pi/FBI/ods-local-server-test/scripts/takevideo.sh ${seconds}`, { shell:true });
 
     if(script.error){
         console.error("triggerVideo_ScriptError", script.error);
@@ -91,4 +102,23 @@ function triggerVideo(){
             }
         });
     }
+}
+
+function dirTree(filename){
+    const stats = fs.lstatSync(filename);
+    const info = {
+        path: filename,
+        name: path.basename(filename)
+    }
+
+    if (stats.isDirectory()) {
+        info.type = "folder";
+        info.children = fs.readdirSync(filename).map(function(child) {
+            return dirTree(filename + '/' + child);
+        });
+    } else {
+        info.type = "file";
+    }
+
+    return info;
 }

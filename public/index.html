@@ -38,6 +38,7 @@
             console.log("ready");
 
             getStatus();
+            test();
 
             // click start
             $("#APP_START").click(function(){
@@ -66,6 +67,13 @@
                     })
             })
         })
+
+        function test(){
+            $.post("/videos")
+            .done(function(result){
+                console.log(result);
+            })
+        }
 
         function getStatus(){
             $.post("/status")
