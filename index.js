@@ -57,7 +57,7 @@ app.post("/status", (req,res)=>{
 })
 
 app.post("/videos", (req,res)=>{
-    const root = "/home/pi/FBI/ods-local-server-test/public/videos";
+    const root = "/public/videos";
     const json = dirTree(root);
 
     res.send(json);
